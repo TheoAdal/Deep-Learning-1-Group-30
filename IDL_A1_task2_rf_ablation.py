@@ -257,3 +257,14 @@ out = [{k: v for k, v in r.items() if k != 'model'} for r in results]
 with open(f'{DRIVE_DIR}/clock_rf_ablation.json', 'w') as f:
     json.dump(out, f, indent=2)
 print('saved', len(out), 'runs')
+
+unstable = [run(tag=f'5blocks_noBN_seed{s}', train_dl=train150, val_dl=val150,
+                n_blocks=5, img=150, seed=s, verbose=False) for s in [42, 1, 2, 3]]
+for r in unstable:
+    print(r['tag'], 'best', round(r['best_val_cse'], 1), '| final', round(r['final_val_cse'], 1))
+
+out = [{k: v for k, v in r.items() if k != 'model'} for r in results + unstable]
+with open(f'{DRIVE_DIR}/clock_rf_ablation.json', 'w') as f:
+    json.dump(out, f, indent=2)
+print('saved', len(out), 'runs')
+
